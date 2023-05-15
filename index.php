@@ -39,7 +39,16 @@
                 <a href="validate.php" class="grid-item btn btn-outline-info">Verify</a>
             </div>
         </div>
+
+        <div class="info py-5">
+            <ol>
+                <li>To view all fingerprints, click <span class="text-info">View</span>.</li>
+                <li>To enroll, place fingerprint on the fingerprint sensor and click <span class="text-info">Enroll</span>.</li>
+                <li>To verify, place fingerprint on the fingerprint sensor and click <span class="text-info">Verify</span>.</li>
+            </ol>
+        </div>
     </div>
+    
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
