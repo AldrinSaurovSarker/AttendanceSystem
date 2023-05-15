@@ -1,0 +1,9 @@
+{
+  "rules": {
+    "Fingerprints": {
+      ".indexOn": ["fingerHex"],
+      ".read": true,
+      ".write": true
+    }
+  }
+}
