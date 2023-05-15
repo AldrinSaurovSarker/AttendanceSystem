@@ -1,7 +1,31 @@
-table{
-   border-collapse: collapse;
+body {
+   height: 100vh;
 }
-td{
-   padding:5px;
-   text-align: center;
+
+table td {
+   border: 1px solid #ccc;
+}
+
+.grid-options {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   grid-gap: 15px;
+}
+
+.grid-item {
+   border: 1px solid #ccc;
+   width: 100px;
+}
+
+.grid-item i {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   height: 100px;
+}
+
+.msg {
+   color: blue;
+   font-weight: bold;
+   font-size: 30px;
 }

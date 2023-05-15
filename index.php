@@ -1,31 +1,42 @@
-<?php
-   include("config.php");
-   include("firebaseRDB.php");
-   $db = new firebaseRDB($databaseURL);
-?>
+<!DOCTYPE html>
+<html lang="en">
 
-<title>Proxy Detection System | Fingerprints</title>
-<link rel="stylesheet" href="style.css">
-<table border="1" width="500">
-   <tr align="center" bgcolor="#dddddd" ;>
-      <td>ID</td>
-      <td>FingerHex</td>
-      <td colspan="2">Action</td>
-   </tr>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proxy Detection System</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/676c01a977.js"></script>
+</head>
 
-   <?php
-      $data = $db->retrieve("Fingerprints");
-      $data = json_decode($data, 1);
-      
-      if(is_array($data)){
-         foreach($data as $id => $Fingerprints) {
-            echo
-            "<tr>
-               <td>{$id}</td>
-               <td>{$Fingerprints['fingerHex']}</td>
-               <td><a href='delete.php?id=$id'>DELETE</a></td>
-            </tr>";
-         }
-      }
-   ?>
-</table>
+<body class="d-flex align-items-center justify-content-center">
+    <div class="container d-flex align-items-center justify-content-center">
+        <div class="fingerprint-list text-center col-md-3">
+            <h1 class="text-uppercase"><i class="fas fa-fingerprint mb-4 text-primary"></i> Options</h1>
+            <div class="grid-options">
+                <a class="grid-item text-decoration-none border-success">
+                    <i class="fas fa-eye text-success fa-3x"></i>
+                </a>
+
+                <a class="grid-item text-decoration-none border-primary">
+                    <i class="fas fa-user-plus text-primary fa-3x"></i>
+                </a>
+
+                <a class="grid-item text-decoration-none border-info">
+                    <i class="fas fa-user-check fa-3x text-info"></i>
+                </a>
+
+                <a href="fingerprints.php" class="grid-item btn btn-outline-success">View</a>
+                <a href="enroll.php" class="grid-item btn btn-outline-primary">Enroll</a>
+                <a href="validate.php" class="grid-item btn btn-outline-info">Verify</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
