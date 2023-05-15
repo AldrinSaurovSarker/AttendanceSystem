@@ -17,7 +17,13 @@
     <script src="https://kit.fontawesome.com/676c01a977.js"></script>
 </head>
 
-<body class="d-flex align-items-center justify-content-center">
+<body>
+    <h1 class="header text-center py-5 text-primary">
+        <a href="index.php" class="text-decoration-none">
+            <i class="fas fa-home"></i> Proxy Detection System
+        </a>
+   </h1>
+
     <div class="container d-flex align-items-center justify-content-center">
         <?php
             $data = $db->retrieve("Fingerprints");
