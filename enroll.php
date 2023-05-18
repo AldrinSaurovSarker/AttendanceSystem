@@ -19,8 +19,9 @@
 
 <body>
     <h1 class="header text-center py-5 text-primary">
-        <a href="index.php" class="text-decoration-none">
-            <i class="fas fa-home"></i> Proxy Detection System
+        <a href="index.php" class="text-decoration-none d-flex align-items-center justify-content-center">
+            <img src="house.png">
+            <div class="ms-2">Proxy Detection System</div>
         </a>
     </h1>
 
@@ -51,7 +52,15 @@
                 echo "<div class='msg'>No fingerprint found on the sensor.</div>";
             }
         ?>
+
+        <div class="text-info fw-bold pt-5">Place your finger on the fingerprint sensor to register your fingerprint and wait a while.</div>
     </div>
+
+    <script>
+        setTimeout(() => {
+            location.reload();
+        }, 2500);
+    </script>
 </body>
 
 </html>

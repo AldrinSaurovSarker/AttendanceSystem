@@ -19,8 +19,9 @@
 
 <body>
    <h1 class="header text-center py-5 text-primary">
-      <a href="index.php" class="text-decoration-none">
-         <i class="fas fa-home"></i> Proxy Detection System
+      <a href="index.php" class="text-decoration-none d-flex align-items-center justify-content-center">
+         <img src="house.png">
+         <div class="ms-2">Proxy Detection System</div>
       </a>
    </h1>
 
@@ -55,11 +56,9 @@
                   }
                } else {
                   echo
-                  "<tr>
-                     <td colspan='3'>
-                        No fingerprints available.
-                     </td>
-                  </tr>
+                  "<div class='p-3'>
+                     No fingerprints available.
+                  </div>
                   ";
                }
             ?>
