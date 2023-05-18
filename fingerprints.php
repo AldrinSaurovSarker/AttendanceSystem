@@ -27,12 +27,12 @@
    <div class="container">
       <div class="fingerprint-list text-center">
          <h1 class="text-uppercase"><i class="fas fa-fingerprint mb-4 text-primary"></i> List of all fingerprints</h1>
-         <table class="table table-striped shadow rounded">
-            <tr class="bg-info text-light fw-bold">
-               <td>ID</td>
-               <td>Fingerprint Hex</td>
-               <td>Action</td>
-            </tr>
+         <div class="f-table shadow rounded">
+            <div class="bg-info text-light f-row fw-bold">
+               <div class='f-col p-2'>ID</div>
+               <div class='f-col p-2'>Fingerprint Hex</div>
+               <div class='f-col p-2'>Action</div>
+            </div>
 
             <?php
                $data = $db->retrieve("Fingerprints");
@@ -42,14 +42,15 @@
                   foreach($data as $id => $Fingerprints) {
                      if ($id != 'temp') {
                         echo
-                        "<tr>
-                           <td>{$Fingerprints['id']}</td>
-                           <td>{$Fingerprints['fingerHex']}</td>
-                           <td>
-                              <i class='fas fa-trash-alt text-danger'></i> 
-                              <a href='delete.php?id=$id' class='text-decoration-none'>Delete</a>
-                           </td>
-                        </tr>";
+                        "<div class='f-row'>
+                           <div class='f-col p-2'>{$Fingerprints['id']}</div>
+                           <div class='f-col p-2 hex'>{$Fingerprints['fingerHex']}</div>
+                           <div class='f-col p-2'>
+                              <a href='delete.php?id=$id' class='text-decoration-none'>
+                                 <i class='fas fa-trash-alt text-danger'></i> Delete
+                              </a>
+                           </div>
+                        </div>";
                      }
                   }
                } else {
@@ -62,7 +63,7 @@
                   ";
                }
             ?>
-         </table>
+         </div>
       </div>
    </div>
 

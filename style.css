@@ -1,24 +1,31 @@
-body {
-   height: 100vh;
-}
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&display=swap');
 
 .header {
    font-variant: small-caps;
 }
 
 .container {
-   position: absolute;
-   top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);
    flex-direction: column;
 }
 
-table td {
-   border: 1px solid #ccc;
+.f-table {
+   margin-bottom: 200px;
 }
 
-table td:nth-of-type(2) {
+.f-row {
+   display: grid;
+   grid-template-columns: 1fr 8fr 1fr;
+}
+
+.f-col {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border: 1px solid #ccc;
+   font-family: 'Rajdhani', sans-serif;
+}
+
+.hex {
    word-break: break-all;
 }
 
