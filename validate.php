@@ -38,12 +38,12 @@
             
                 foreach ($data as $id => $fingerprint) {
                     if ($fingerprint['fingerHex'] === $tempFingerprint) {
-                        echo "<div class='msg'>Fingerprint matched.</div>";
+                        echo "<div class='msg success'>Fingerprint matched with id ".$fingerprint['id'].".</div>";
                         file_get_contents('http://localhost/attendance/delete.php?id=temp');
                         exit;
                     }
                 }
-                echo "<div class='msg'>Fingerprint doesn't match.</div>";
+                echo "<div class='msg success'>Fingerprint doesn't match.</div>";
                 file_get_contents('http://localhost/attendance/delete.php?id=temp');
             } else {
                 echo "<div class='msg'>No fingerprint found on the sensor.</div>";
@@ -54,9 +54,16 @@
     </div>
 
     <script>
-        setTimeout(() => {
-            location.reload();
-        }, 2500);
+        const success = document.querySelector('.success');
+        if (success == null) {
+            setTimeout(() => {
+                location.reload();
+            }, 1);
+        } else {
+            setTimeout(() => {
+                location.reload();
+            }, 10000);
+        }
     </script>
 </body>
 

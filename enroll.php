@@ -39,13 +39,13 @@
             
                 foreach ($data as $id => $fingerprint) {
                     if ($fingerprint['fingerHex'] === $tempFingerprint) {
-                        echo "<div class='msg'>Fingerprint already exists.</div>";
+                        echo "<div class='msg success'>Fingerprint already exists.</div>";
                         file_get_contents('http://localhost/attendance/delete.php?id=temp');
                         exit;
                     }
                 }
             
-                echo "<div class='msg'>Successfully enrolled.</div>";
+                echo "<div class='msg success'>Successfully enrolled.</div>";
                 file_get_contents('http://localhost/attendance/delete.php?id=temp');
                 file_get_contents('http://localhost/attendance/action_add.php?id='.$tempId.'&fingerHex='.$tempFingerprint);
             } else {
@@ -57,9 +57,16 @@
     </div>
 
     <script>
-        setTimeout(() => {
-            location.reload();
-        }, 2500);
+        const success = document.querySelector('.success');
+        if (success == null) {
+            setTimeout(() => {
+                location.reload();
+            }, 1);
+        } else {
+            setTimeout(() => {
+                location.reload();
+            }, 10000);
+        }
     </script>
 </body>
 
