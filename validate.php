@@ -33,17 +33,19 @@
             if (!is_array($data)) {
                 echo "<div class='msg'>No fingerprint found on the sensor.</div>";
             } else if (isset($data['temp'])) {
-                $tempFingerprint = $data['temp']['fingerHex'];
+                $tempFingerprintId = $data['temp']['id'];
+                $tempFingerprintHex = $data['temp']['fingerHex'];
                 unset($data['temp']);
             
                 foreach ($data as $id => $fingerprint) {
-                    if ($fingerprint['fingerHex'] === $tempFingerprint) {
+                    if ($fingerprint['id'] === $tempFingerprintId) {
                         echo "<div class='msg success'>Fingerprint matched with id ".$fingerprint['id'].".</div>";
+                        file_get_contents('http://localhost/attendance/action_edit.php?id='.$id.'&fingerHex='.$tempFingerprintHex);
                         file_get_contents('http://localhost/attendance/delete.php?id=temp');
                         exit;
                     }
                 }
-                echo "<div class='msg success'>Fingerprint doesn't match.</div>";
+                echo "<div class='msg failure'>Fingerprint doesn't match.</div>";
                 file_get_contents('http://localhost/attendance/delete.php?id=temp');
             } else {
                 echo "<div class='msg'>No fingerprint found on the sensor.</div>";
@@ -55,10 +57,18 @@
 
     <script>
         const success = document.querySelector('.success');
+        const failure = document.querySelector('.failure');
+
         if (success == null) {
-            setTimeout(() => {
-                location.reload();
-            }, 1);
+            if (failure == null) {
+                setTimeout(() => {
+                    location.reload();
+                }, 1); 
+            } else {
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            }     
         } else {
             setTimeout(() => {
                 location.reload();
