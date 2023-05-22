@@ -61,18 +61,11 @@
 
     <script>
         const success = document.querySelector('.success');
-        const failure = document.querySelector('.failure');
-
+        
         if (success == null) {
-            if (failure == null) {
-                setTimeout(() => {
-                    location.reload();
-                }, 1); 
-            } else {
-                setTimeout(() => {
-                    location.reload();
-                }, 1000);
-            }     
+            setTimeout(() => {
+                location.reload();
+            }, 1);
         } else {
             setTimeout(() => {
                 location.reload();

@@ -5,8 +5,8 @@
 
 #define FIREBASE_HOST "attendance-system-6d7a6-default-rtdb.firebaseio.com/"
 #define FIREBASE_AUTH "AIzaSyCI03PF-cz7jkTJxx9lSJt7uy4OSy_mVHM"
-#define WIFI_SSID "Villa"
-#define WIFI_PASSWORD "87654321"
+#define WIFI_SSID "Sumaiya"
+#define WIFI_PASSWORD "sumaiya5500"
 
 FirebaseData firebaseData;
 HardwareSerial mySerial(2);
@@ -85,6 +85,8 @@ void loop()
         Serial.println("'c' -> clear database");
         Serial.println();
     }
+
+    counter = 0;
     
     if (Serial.available()>0) {
         switch(Serial.read())
@@ -105,7 +107,6 @@ void loop()
         }
     }
     
-    counter = 0;
 }
 
 void deleteFingerprint()
@@ -234,9 +235,6 @@ void loadFingerprintTemplate(int id)
     switch (p)
     {
     case FINGERPRINT_OK:
-        Serial.print("Template ");
-        Serial.print(id);
-        Serial.println(" loaded");
         break;
     case FINGERPRINT_PACKETRECIEVEERR:
         Serial.println("Communication error");
@@ -246,16 +244,11 @@ void loadFingerprintTemplate(int id)
         Serial.println(p);
     }
 
-    Serial.print("Attempting to get #");
-    Serial.println(id);
     p = finger.getModel();
 
     switch (p)
     {
     case FINGERPRINT_OK:
-        Serial.print("Template ");
-        Serial.print(id);
-        Serial.println(" transferring:");
         break;
     default:
         Serial.print("Unknown error ");
@@ -320,12 +313,12 @@ void sendToFirebase(int id, String data)
     Firebase.setString(firebaseData, "/Fingerprints/temp/fingerHex", data);
 }
 
-uint8_t getFingerprintID()
+int getFingerprintID()
 {
     p = finger.fingerSearch();
     if (p == FINGERPRINT_OK)
     {
-        Serial.println("Found a print match!");
+        Serial.println(".");
     }
     else if (p == FINGERPRINT_PACKETRECIEVEERR)
     {
@@ -334,7 +327,7 @@ uint8_t getFingerprintID()
     }
     else if (p == FINGERPRINT_NOTFOUND)
     {
-        Serial.println("Did not find a match");
+        Serial.println("x");
         return p;
     }
     else
@@ -342,11 +335,6 @@ uint8_t getFingerprintID()
         Serial.println("Unknown error");
         return p;
     }
-
-    Serial.print("Found ID #");
-    Serial.print(finger.fingerID);
-    Serial.print(" with confidence of ");
-    Serial.println(finger.confidence);
 
     return finger.fingerID;
 }
