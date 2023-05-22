@@ -52,7 +52,7 @@
             }
         ?>
 
-        <div class="text-info fw-bold pt-5">Place your finger on the fingerprint sensor to give attendance and wait a while.</div>
+        <div class="text-info text-center fw-bold pt-5">Place your finger on the fingerprint sensor to give attendance and wait a while.</div>
     </div>
 
     <script>
