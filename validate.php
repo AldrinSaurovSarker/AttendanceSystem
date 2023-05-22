@@ -34,7 +34,11 @@
                 echo "<div class='msg'>No fingerprint found on the sensor.</div>";
             } else if (isset($data['temp'])) {
                 $tempFingerprintId = $data['temp']['id'];
-                $tempFingerprintHex = $data['temp']['fingerHex'];
+                if (isset($data['temp']['fingerHex'])) {
+                    $tempFingerprintHex = $data['temp']['fingerHex'];
+                } else {
+                    $tempFingerprintHex = null;
+                }
                 unset($data['temp']);
             
                 foreach ($data as $id => $fingerprint) {
