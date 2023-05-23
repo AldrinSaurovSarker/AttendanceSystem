@@ -45,9 +45,12 @@
                     }
                 }
             
-                echo "<div class='msg success'>Successfully enrolled.</div>";
+                if ($tempFingerprint != "" || $tempFingerprint != null) {
+                    echo "<div class='msg success'>Successfully enrolled.</div>";
+                    file_get_contents('http://localhost/attendance/action_add.php?id='.$tempId.'&fingerHex='.$tempFingerprint);
+                }
+                
                 file_get_contents('http://localhost/attendance/delete.php?id=temp');
-                file_get_contents('http://localhost/attendance/action_add.php?id='.$tempId.'&fingerHex='.$tempFingerprint);
             } else {
                 echo "<div class='msg'>No fingerprint found on the sensor.</div>";
             }
