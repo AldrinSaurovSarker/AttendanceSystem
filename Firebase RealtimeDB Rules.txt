@@ -1,7 +1,12 @@
 {
   "rules": {
-    "Fingerprints": {
+    "Audits": {
       ".indexOn": ["id"],
+      ".read": true,
+      ".write": true
+    },
+    "Fingerprints": {
+      ".indexOn": ["fingerHex"],
       ".read": true,
       ".write": true
     }

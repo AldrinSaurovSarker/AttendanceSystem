@@ -45,11 +45,13 @@
                     if ($fingerprint['id'] === $tempFingerprintId) {
                         echo "<div class='msg success'>Fingerprint matched with id ".$fingerprint['id'].".</div>";
                         file_get_contents('http://localhost/attendance/action_edit.php?id='.$id.'&fingerHex='.$tempFingerprintHex);
+                        file_get_contents('http://localhost/attendance/audit.php?id='.$id.'&action=1');
                         file_get_contents('http://localhost/attendance/delete.php?id=temp');
                         exit;
                     }
                 }
                 echo "<div class='msg failure'>Fingerprint doesn't match.</div>";
+                file_get_contents('http://localhost/attendance/audit.php?id='.$tempFingerprintId.'&action=4');
                 file_get_contents('http://localhost/attendance/delete.php?id=temp');
             } else {
                 echo "<div class='msg'>No fingerprint found on the sensor.</div>";
