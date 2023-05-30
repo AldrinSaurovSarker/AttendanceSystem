@@ -20,24 +20,36 @@
     </h1>
     
     <div class="container d-flex align-items-center justify-content-center">
-        <div class="fingerprint-list text-center col-md-3">
+        <div class="fingerprint-list text-center col-md-4">
             <h1 class="text-uppercase"><i class="fas fa-fingerprint mb-4 text-primary"></i> Options</h1>
             <div class="grid-options">
-                <a class="grid-item text-decoration-none border-success">
-                    <i class="fas fa-eye text-success fa-3x"></i>
-                </a>
+                <div>
+                    <div class="grid-item text-decoration-none border-success mb-3">
+                        <i class="fas fa-eye text-success fa-3x"></i>
+                    </div>
+                    <a href="fingerprints.php" class="grid-item btn btn-outline-success">View</a>
+                </div>
 
-                <a class="grid-item text-decoration-none border-primary">
-                    <i class="fas fa-user-plus text-primary fa-3x"></i>
-                </a>
+                <div>
+                    <div class="grid-item text-decoration-none border-primary mb-3">
+                        <i class="fas fa-user-plus text-primary fa-3x"></i>
+                    </div>
+                    <a href="enroll.php" class="grid-item btn btn-outline-primary">Enroll</a>
+                </div>
 
-                <a class="grid-item text-decoration-none border-info">
-                    <i class="fas fa-user-check fa-3x text-info"></i>
-                </a>
+                <div>
+                    <div class="grid-item text-decoration-none border-info mb-3">
+                        <i class="fas fa-user-check fa-3x text-info"></i>
+                    </div>
+                    <a href="validate.php" class="grid-item btn btn-outline-info">Verify</a>
+                </div>
 
-                <a href="fingerprints.php" class="grid-item btn btn-outline-success">View</a>
-                <a href="enroll.php" class="grid-item btn btn-outline-primary">Enroll</a>
-                <a href="validate.php" class="grid-item btn btn-outline-info">Verify</a>
+                <div>
+                    <div class="grid-item text-decoration-none border-warning mb-3">
+                        <i class="fas fa-info-circle fa-3x text-warning"></i>
+                    </div>
+                    <a href="logs.php" class="grid-item btn btn-outline-warning">Logs</a>
+                </div>
             </div>
         </div>
 
@@ -46,6 +58,7 @@
                 <li>To view all fingerprints, click <span class="text-info">View</span>.</li>
                 <li>To enroll, place fingerprint on the fingerprint sensor and click <span class="text-info">Enroll</span>.</li>
                 <li>To verify, place fingerprint on the fingerprint sensor and click <span class="text-info">Verify</span>.</li>
+                <li>To view all logs, click <span class="text-info">Logs</span>.</li>
             </ol>
         </div>
     </div>

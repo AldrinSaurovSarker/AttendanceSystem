@@ -31,7 +31,7 @@
 
 .grid-options {
    display: grid;
-   grid-template-columns: repeat(3, 1fr);
+   grid-template-columns: repeat(4, 1fr);
    grid-gap: 15px;
 }
 
@@ -51,4 +51,10 @@
    color: blue;
    font-weight: bold;
    font-size: 30px;
+}
+
+@media screen and (max-width:512px) {
+   .grid-options {
+      grid-template-columns: repeat(2, 1fr);
+   }
 }
