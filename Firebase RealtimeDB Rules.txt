@@ -9,6 +9,11 @@
       ".indexOn": ["fingerHex"],
       ".read": true,
       ".write": true
+    },
+    "LatestAudit": {
+      ".indexOn": ["log"],
+      ".read": true,
+      ".write": true
     }
   }
 }

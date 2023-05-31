@@ -45,7 +45,7 @@
                     if ($fingerprint['id'] === $tempFingerprintId) {
                         echo "<div class='msg success'>Fingerprint matched with id ".$fingerprint['id'].".</div>";
                         file_get_contents('http://localhost/attendance/action_edit.php?id='.$id.'&fingerHex='.$tempFingerprintHex);
-                        file_get_contents('http://localhost/attendance/audit.php?id='.$id.'&action=1');
+                        file_get_contents('http://localhost/attendance/audit.php?id='.$fingerprint['id'].'&action=1');
                         file_get_contents('http://localhost/attendance/delete.php?id=temp');
                         exit;
                     }

@@ -33,7 +33,7 @@
             if (!is_array($data)) {
                 echo "<div class='msg'>No audit logs available.</div>";
             } else {
-                foreach ($data as $id => $audit) {
+                foreach (array_reverse($data, true) as $id => $audit) {
                     echo
                     '<div class="card w-100 my-2">
                         <div class="card-body">
@@ -50,7 +50,7 @@
                             }
 
                             echo '
-                            <span class="card-text text-muted">'.$audit['timestamp'].'<span>
+                            <span class="card-text text-secondary">'.$audit['timestamp'].'<span>
                         </div>
                     </div>';
                 }                
