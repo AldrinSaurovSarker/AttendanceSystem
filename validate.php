@@ -33,26 +33,29 @@
             if (!is_array($data)) {
                 echo "<div class='msg'>No fingerprint found on the sensor.</div>";
             } else if (isset($data['temp'])) {
-                $tempFingerprintId = $data['temp']['id'];
-                if (isset($data['temp']['fingerHex'])) {
-                    $tempFingerprintHex = $data['temp']['fingerHex'];
-                } else {
-                    $tempFingerprintHex = null;
-                }
-                unset($data['temp']);
-            
-                foreach ($data as $id => $fingerprint) {
-                    if ($fingerprint['id'] === $tempFingerprintId) {
-                        echo "<div class='msg success'>Fingerprint matched with id ".$fingerprint['id'].".</div>";
-                        file_get_contents('http://localhost/attendance/action_edit.php?id='.$id.'&fingerHex='.$tempFingerprintHex);
-                        file_get_contents('http://localhost/attendance/audit.php?id='.$fingerprint['id'].'&action=1');
-                        file_get_contents('http://localhost/attendance/delete.php?id=temp');
-                        exit;
+                if ($data['temp']['action'] == "2" || $data['temp']['action'] == 2) {
+                    $tempFingerprintId = $data['temp']['id'];
+                
+                    if (isset($data['temp']['fingerHex'])) {
+                        $tempFingerprintHex = $data['temp']['fingerHex'];
+                    } else {
+                        $tempFingerprintHex = null;
                     }
+                    unset($data['temp']);
+                
+                    foreach ($data as $id => $fingerprint) {
+                        if ($fingerprint['id'] === $tempFingerprintId) {
+                            echo "<div class='msg success'>Fingerprint matched with id ".$fingerprint['id'].".</div>";
+                            file_get_contents('http://localhost/attendance/action_edit.php?id='.$id.'&fingerHex='.$tempFingerprintHex);
+                            file_get_contents('http://localhost/attendance/audit.php?id='.$fingerprint['id'].'&action=1');
+                            file_get_contents('http://localhost/attendance/delete.php?id=temp');
+                            exit;
+                        }
+                    }
+                    echo "<div class='msg failure'>Fingerprint doesn't match.</div>";
+                    file_get_contents('http://localhost/attendance/audit.php?id='.$tempFingerprintId.'&action=4');
+                    file_get_contents('http://localhost/attendance/delete.php?id=temp');
                 }
-                echo "<div class='msg failure'>Fingerprint doesn't match.</div>";
-                file_get_contents('http://localhost/attendance/audit.php?id='.$tempFingerprintId.'&action=4');
-                file_get_contents('http://localhost/attendance/delete.php?id=temp');
             } else {
                 echo "<div class='msg'>No fingerprint found on the sensor.</div>";
             }
