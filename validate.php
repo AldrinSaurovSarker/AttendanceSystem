@@ -65,17 +65,9 @@
     </div>
 
     <script>
-        const success = document.querySelector('.success');
-        
-        if (success == null) {
-            setTimeout(() => {
-                location.reload();
-            }, 1);
-        } else {
-            setTimeout(() => {
-                location.reload();
-            }, 10000);
-        }
+        setTimeout(() => {
+            location.reload();
+        }, 1);
     </script>
 </body>
 

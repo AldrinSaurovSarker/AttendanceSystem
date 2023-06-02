@@ -47,10 +47,12 @@
                         }
                     }
                 
-                    echo "<div class='msg success'>Successfully enrolled.</div>";
-                    file_get_contents('http://localhost/attendance/delete.php?id=temp');
-                    file_get_contents('http://localhost/attendance/action_add.php?id='.$tempId.'&fingerHex='.$tempFingerprint);
-                    file_get_contents('http://localhost/attendance/audit.php?id='.$tempId.'&action=2');
+                    if ($tempId != null || $tempId != "" || $tempFingerprint != null || $tempFingerprint != "") {
+                        echo "<div class='msg success'>Successfully enrolled.</div>";
+                        file_get_contents('http://localhost/attendance/delete.php?id=temp');
+                        file_get_contents('http://localhost/attendance/action_add.php?id='.$tempId.'&fingerHex='.$tempFingerprint);
+                        file_get_contents('http://localhost/attendance/audit.php?id='.$tempId.'&action=2');
+                    }
                 }
             } else {
                 echo "<div class='msg'>No fingerprint found on the sensor.</div>";
@@ -61,16 +63,9 @@
     </div>
 
     <script>
-        const success = document.querySelector('.success');
-        if (success == null) {
-            setTimeout(() => {
-                location.reload();
-            }, 1);
-        } else {
-            setTimeout(() => {
-                location.reload();
-            }, 10000);
-        }
+        setTimeout(() => {
+            location.reload();
+        }, 1);
     </script>
 </body>
 
