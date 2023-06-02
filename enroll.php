@@ -47,7 +47,7 @@
                         }
                     }
                 
-                    if ($tempId != null || $tempId != "" || $tempFingerprint != null || $tempFingerprint != "") {
+                    if ($tempId != null && $tempId != "" && $tempFingerprint != null && $tempFingerprint != "") {
                         echo "<div class='msg success'>Successfully enrolled.</div>";
                         file_get_contents('http://localhost/attendance/delete.php?id=temp');
                         file_get_contents('http://localhost/attendance/action_add.php?id='.$tempId.'&fingerHex='.$tempFingerprint);
