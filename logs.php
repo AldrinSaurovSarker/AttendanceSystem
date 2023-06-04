@@ -101,7 +101,9 @@
                             '.$title;
 
                             if (isset($audit['room'])) {
-                                echo '<span class="mx-auto text-muted">Room: '.$audit['room'].'</span>';
+                                if ($audit['room'] != "" && $audit['room'] != null) {
+                                    echo '<span class="mx-auto text-muted">Room: '.$audit['room'].'</span>';
+                                }
                             }
                     
                             echo'
