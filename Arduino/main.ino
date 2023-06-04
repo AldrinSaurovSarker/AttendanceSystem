@@ -1,6 +1,8 @@
 #include <Adafruit_Fingerprint.h>
 #include <string>
 #include <WiFi.h>
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
 #include "FirebaseESP32.h"
 #include "Keypad.h"
 
@@ -28,6 +30,7 @@ Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 FirebaseData firebaseData;
 HardwareSerial mySerial(2);
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 uint8_t p = -1;
 int counter = 1;
@@ -37,6 +40,7 @@ void setup()
 {
     Serial.begin(9600);
     initWifi();
+    lcd.begin();
 
     while (!Serial);
     delay(100);
@@ -102,11 +106,12 @@ void loop()
 {
     if (counter == 1)
     {
+        displayMsg("Enter an option...");
         Serial.println("Enter an option...");
-        Serial.println("'1' -> enroll");
-        Serial.println("'2' -> verify");
-        Serial.println("'3' -> clear database");
-        Serial.println();
+        displayMsg("'1' -> enroll");
+        displayMsg("'2' -> verify");
+        displayMsg("'3' -> clear database");
+
     }
 
     counter = 0;
@@ -115,6 +120,7 @@ void loop()
     if (key)
     {
         Serial.println(key);
+        displayMsgInt(key-'0');
 
         switch (key)
         {
@@ -135,19 +141,32 @@ void loop()
         }
     }
 }
+void displayMsg(String msg)
+{
+    delay(1000);
+    lcd.clear();
+	  lcd.print(msg);
+}
 
+void displayMsgInt(int msgI)
+{
+    delay(1000);
+    lcd.clear();
+	  lcd.print(msgI);
+
+}
 
 void deleteFingerprint()
 {
     finger.emptyDatabase();
-    Serial.println("Now database is empty :)");
+    displayMsg("Database's empty");
 }
 
 
 void enrollFingerprint()
 {
     int id = readnumber();
-    Serial.println("Place finger on the fingerprint sensor...");
+    displayMsg("Place finger...");
 
     if (readFingerprintSensor() != FINGERPRINT_OK)
     {
@@ -155,7 +174,7 @@ void enrollFingerprint()
     }
 
     finger.image2Tz(1);
-    Serial.println("Place the same finger again...");
+    displayMsg("Same finger..");
 
     if (readFingerprintSensor() != FINGERPRINT_OK)
     {
@@ -176,14 +195,14 @@ void enrollFingerprint()
 
     String data = readFingerprintTemplate();
     sendToFirebase(id, data, 1, ROOM);
-    delay(10000);
+    delay(15000);
     receiveFromFirebase();
 }
 
 
 void verifyFingerprint()
 {
-    Serial.println("Place finger on the fingerprint sensor...");
+    displayMsg("Put finger on..");
     readFingerprintSensor();
     finger.image2Tz();
 
@@ -192,21 +211,21 @@ void verifyFingerprint()
 
     String data = readFingerprintTemplate();
     sendToFirebase(id, data, 2, ROOM);
-    delay(10000);
+    delay(15000);
     receiveFromFirebase();
 }
 
 
 uint8_t readnumber(void)
 {
-    Serial.println("Please type in the ID...");
+    displayMsg("Type ID...");
     delay(2000);
-    
     char key2;
+    int flag=2;
     uint8_t value = 0;
     static char previousKey = '\0';
 
-    while (1)
+    while (flag!=0)
     {
         key2 = keypad.getKey();
         
@@ -231,10 +250,13 @@ uint8_t readnumber(void)
                     previousKey = '\0';
                 }
                 delay(50);
-                break;
+                flag--;
             }
         }
     }
+    displayMsg("Entered id ");
+    displayMsgInt(value);
+    Serial.print(String(value));
     return value;
 }
 
@@ -250,7 +272,7 @@ uint8_t readFingerprintSensor()
         switch (p)
         {
             case FINGERPRINT_OK:
-                Serial.println("Image taken");
+                displayMsg("Image taken");
                 break;
 
             case FINGERPRINT_NOFINGER:
@@ -279,7 +301,7 @@ uint8_t createFingerprintTemplate(int id)
 
     if (p == FINGERPRINT_OK)
     {
-        Serial.println("Prints matched!");
+        displayMsg("Matched!");
     }
     else if (p == FINGERPRINT_PACKETRECIEVEERR)
     {
@@ -288,7 +310,7 @@ uint8_t createFingerprintTemplate(int id)
     }
     else if (p == FINGERPRINT_ENROLLMISMATCH)
     {
-        Serial.println("Fingerprints did not match");
+        displayMsg("Not matched");
         return p;
     }
     else
@@ -301,7 +323,7 @@ uint8_t createFingerprintTemplate(int id)
 
     if (p == FINGERPRINT_OK)
     {
-        Serial.println("Stored!");
+        displayMsg("Stored!");
     }
     else if (p == FINGERPRINT_PACKETRECIEVEERR)
     {
@@ -394,8 +416,8 @@ String readFingerprintTemplate()
         result += getHex(fingerTemplate[i], 2);
     }
 
-    Serial.println(result);
-    Serial.println("\nDone.");
+    //Serial.println(result);
+    displayMsg("Done.");
 
     return result;
 
@@ -426,7 +448,7 @@ void receiveFromFirebase()
 {
     if (Firebase.get(firebaseData, "/LatestAudit/latest/log"))
     {
-        Serial.println(firebaseData.stringData());
+        displayMsg(firebaseData.stringData());
     }
 }
 
@@ -437,7 +459,7 @@ int getFingerprintID()
 
     if (p == FINGERPRINT_OK)
     {
-        Serial.println(".");
+        displayMsg("Found");
     }
     else if (p == FINGERPRINT_PACKETRECIEVEERR)
     {
@@ -446,7 +468,7 @@ int getFingerprintID()
     }
     else if (p == FINGERPRINT_NOTFOUND)
     {
-        Serial.println("x");
+        displayMsg("Not found");
         return p;
     }
     else
