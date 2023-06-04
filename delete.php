@@ -30,6 +30,8 @@
             $delete = $db->delete("Fingerprints", $id);
             echo "<div class='msg'>Fingerprint deleted.</div>";
          }
+
+         header('Location: fingerprints.php');
       ?>
    </div>
 </body>

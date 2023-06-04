@@ -65,7 +65,7 @@
                     <i class='fas fa-calendar-alt fa-2x text-primary me-2'></i>
                     <h2 class='text-left me-auto'>$date</h2>
 
-                    <a href='delete-log-by-date.php'>
+                    <a href='delete_audit_by_date.php?date=".$date."'>
                         <i class='fas fa-trash-alt me-2 fa-2x text-danger'></i>
                     </a>
 
