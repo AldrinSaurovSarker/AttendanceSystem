@@ -2,17 +2,36 @@
 #include <string>
 #include <WiFi.h>
 #include "FirebaseESP32.h"
+#include "Keypad.h"
 
 #define FIREBASE_HOST "attendance-system-6d7a6-default-rtdb.firebaseio.com/"
 #define FIREBASE_AUTH "AIzaSyCI03PF-cz7jkTJxx9lSJt7uy4OSy_mVHM"
 #define WIFI_SSID "Sumaiya"
 #define WIFI_PASSWORD "sumaiya5500"
+#define ROOM 1204
+
+const byte ROWS = 4;
+const byte COLS = 4;
+
+char keys[ROWS][COLS] =
+{
+    { '1', '2', '3', 'A' },
+    { '4', '5', '6', 'B' },
+    { '7', '8', '9', 'C' },
+    { '*', '0', '#', 'D' }
+};
+
+byte rowPins[ROWS] = { 23, 22, 3, 21 };
+byte colPins[COLS] = { 19, 18, 5, 17 };
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
 FirebaseData firebaseData;
 HardwareSerial mySerial(2);
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
+
 uint8_t p = -1;
 int counter = 1;
+
 
 void setup()
 {
@@ -32,6 +51,7 @@ void setup()
     else
     {
         Serial.println("Did not find fingerprint sensor :(");
+
         while (1)
         {
             delay(1);
@@ -56,6 +76,7 @@ void setup()
     Serial.println(finger.baud_rate);
 }
 
+
 void initWifi()
 {
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -76,119 +97,186 @@ void initWifi()
     Firebase.reconnectWiFi(true);
 }
 
+
 void loop()
 {
-    if (counter == 1) {
+    if (counter == 1)
+    {
         Serial.println("Enter an option...");
-        Serial.println("'e' -> enroll");
-        Serial.println("'v' -> verify");
-        Serial.println("'c' -> clear database");
+        Serial.println("'1' -> enroll");
+        Serial.println("'2' -> verify");
+        Serial.println("'3' -> clear database");
         Serial.println();
     }
 
     counter = 0;
-    
-    if (Serial.available()>0) {
-        switch(Serial.read())
+    char key = keypad.getKey();
+
+    if (key)
+    {
+        Serial.println(key);
+
+        switch (key)
         {
-            case 'e':
+            case '1':
                 enrollFingerprint();
                 counter = 1;
                 break;
-                
-            case 'v':
+
+            case '2':
                 verifyFingerprint();
                 counter = 1;
                 break;
-            case 'c':
+
+            case '3':
                 deleteFingerprint();
                 counter = 1;
                 break;
         }
     }
-    
 }
+
 
 void deleteFingerprint()
 {
-  finger.emptyDatabase();
-  Serial.println("Now database is empty :)");
+    finger.emptyDatabase();
+    Serial.println("Now database is empty :)");
 }
-        
+
+
 void enrollFingerprint()
 {
     int id = readnumber();
-
     Serial.println("Place finger on the fingerprint sensor...");
-    readFingerprintSensor();
-    finger.image2Tz(1);
 
+    if (readFingerprintSensor() != FINGERPRINT_OK)
+    {
+        return;
+    }
+
+    finger.image2Tz(1);
     Serial.println("Place the same finger again...");
-    readFingerprintSensor();
+
+    if (readFingerprintSensor() != FINGERPRINT_OK)
+    {
+        return;
+    }
+
     finger.image2Tz(2);
 
-    createFingerprintTemplate(id);
-    loadFingerprintTemplate(id);
+    if (createFingerprintTemplate(id) != FINGERPRINT_OK)
+    {
+        return;
+    }
+
+    if (loadFingerprintTemplate(id) != FINGERPRINT_OK)
+    {
+        return;
+    }
 
     String data = readFingerprintTemplate();
-    sendToFirebase(id, data);
+    sendToFirebase(id, data, 1, ROOM);
+    delay(10000);
+    receiveFromFirebase();
 }
-    
+
+
 void verifyFingerprint()
 {
     Serial.println("Place finger on the fingerprint sensor...");
     readFingerprintSensor();
     finger.image2Tz();
-    
+
     int id = getFingerprintID();
     loadFingerprintTemplate(id);
-    
+
     String data = readFingerprintTemplate();
-    sendToFirebase(id, data);
+    sendToFirebase(id, data, 2, ROOM);
+    delay(10000);
+    receiveFromFirebase();
 }
+
 
 uint8_t readnumber(void)
 {
     Serial.println("Please type in the ID...");
-    uint8_t num = 0;
+    delay(2000);
+    
+    char key2;
+    uint8_t value = 0;
+    static char previousKey = '\0';
 
-    while (num == 0)
+    while (1)
     {
-        while (!Serial.available());
-        num = Serial.parseInt();
+        key2 = keypad.getKey();
+        
+        if (key2)
+        {
+            if (key2 != '\0')
+            {
+                if (previousKey == '\0')
+                {
+                    previousKey = key2;
+                }
+                else
+                {
+                    if (previousKey >= '0' && previousKey <= '9' && key2 >= '0' && key2 <= '9')
+                    {
+                        value = (previousKey - '0') * 10 + (key2 - '0');
+                    }
+                    else
+                    {
+                        value = previousKey - '0';
+                    }
+                    previousKey = '\0';
+                }
+                delay(50);
+                break;
+            }
+        }
     }
-    return num;
+    return value;
 }
 
-void readFingerprintSensor()
+
+uint8_t readFingerprintSensor()
 {
     p = -1;
+
     while (p != FINGERPRINT_OK)
     {
         p = finger.getImage();
+
         switch (p)
         {
-        case FINGERPRINT_OK:
-            Serial.println("Image taken");
-            break;
-        case FINGERPRINT_NOFINGER:
-            break;
-        case FINGERPRINT_PACKETRECIEVEERR:
-            Serial.println("Communication error");
-            break;
-        case FINGERPRINT_IMAGEFAIL:
-            Serial.println("Imaging error");
-            break;
-        default:
-            Serial.println("Unknown error");
-            break;
+            case FINGERPRINT_OK:
+                Serial.println("Image taken");
+                break;
+
+            case FINGERPRINT_NOFINGER:
+                break;
+
+            case FINGERPRINT_PACKETRECIEVEERR:
+                Serial.println("Communication error");
+                break;
+
+            case FINGERPRINT_IMAGEFAIL:
+                Serial.println("Imaging error");
+                break;
+
+            default:
+                Serial.println("Unknown error");
+                break;
         }
     }
+    return p;
 }
 
-void createFingerprintTemplate(int id)
+
+uint8_t createFingerprintTemplate(int id)
 {
     finger.createModel();
+
     if (p == FINGERPRINT_OK)
     {
         Serial.println("Prints matched!");
@@ -196,17 +284,21 @@ void createFingerprintTemplate(int id)
     else if (p == FINGERPRINT_PACKETRECIEVEERR)
     {
         Serial.println("Communication error");
+        return p;
     }
     else if (p == FINGERPRINT_ENROLLMISMATCH)
     {
         Serial.println("Fingerprints did not match");
+        return p;
     }
     else
     {
         Serial.println("Unknown error");
+        return p;
     }
 
     p = finger.storeModel(id);
+
     if (p == FINGERPRINT_OK)
     {
         Serial.println("Stored!");
@@ -227,34 +319,44 @@ void createFingerprintTemplate(int id)
     {
         Serial.println("Unknown error");
     }
+
+    return p;
 }
 
-void loadFingerprintTemplate(int id)
+
+uint8_t loadFingerprintTemplate(int id)
 {
     p = finger.loadModel(id);
+
     switch (p)
     {
-    case FINGERPRINT_OK:
-        break;
-    case FINGERPRINT_PACKETRECIEVEERR:
-        Serial.println("Communication error");
+        case FINGERPRINT_OK:
+            break;
 
-    default:
-        Serial.print("Unknown error ");
-        Serial.println(p);
+        case FINGERPRINT_PACKETRECIEVEERR:
+            Serial.println("Communication error");
+            return p;
+
+        default:
+            Serial.print("Unknown error ");
+            return p;
     }
 
     p = finger.getModel();
 
     switch (p)
     {
-    case FINGERPRINT_OK:
-        break;
-    default:
-        Serial.print("Unknown error ");
-        Serial.println(p);
-    }
+        case FINGERPRINT_OK:
+            break;
+            
+        default:
+            Serial.print("Unknown error ");
+            return p;
+        }
+
+    return p;
 }
+
 
 String readFingerprintTemplate()
 {
@@ -277,7 +379,6 @@ String readFingerprintTemplate()
 
     uint8_t fingerTemplate[512];
     memset(fingerTemplate, 0xff, 512);
-
     int uindx = 9, index = 0;
     memcpy(fingerTemplate + index, bytesReceived + uindx, 256);
     uindx += 256;
@@ -287,35 +388,53 @@ String readFingerprintTemplate()
     memcpy(fingerTemplate + index, bytesReceived + uindx, 256);
 
     String result;
+
     for (int i = 0; i < 512; ++i)
     {
         result += getHex(fingerTemplate[i], 2);
     }
+
     Serial.println(result);
     Serial.println("\nDone.");
 
     return result;
+
 }
+
 
 String getHex(int num, int precision)
 {
     char tmp[16];
     char format[128];
-
     sprintf(format, "%%.%dX", precision);
     sprintf(tmp, format, num);
+
     return String(tmp);
 }
 
-void sendToFirebase(int id, String data)
+
+void sendToFirebase(int id, String data, int action, int room)
 {
     Firebase.setString(firebaseData, "/Fingerprints/temp/id", String(id));
     Firebase.setString(firebaseData, "/Fingerprints/temp/fingerHex", data);
+    Firebase.setString(firebaseData, "/Fingerprints/temp/action", String(action));
+    Firebase.setString(firebaseData, "/Fingerprints/temp/room", String(room));
 }
+
+
+void receiveFromFirebase()
+{
+    if (Firebase.get(firebaseData, "/LatestAudit/latest/log"))
+    {
+        Serial.println(firebaseData.stringData());
+    }
+}
+
 
 int getFingerprintID()
 {
     p = finger.fingerSearch();
+
     if (p == FINGERPRINT_OK)
     {
         Serial.println(".");
