@@ -96,14 +96,17 @@
 
                     echo
                     '<div class="card w-100 my-2">
-                        <div class="card-body d-flex">
-                            '.$icon.'&emsp;
-                            '.$title;
+                        <div class="card-body log-table">
+                            <div class="d-flex">'.$icon.'&emsp;'.$title.'</div>';
 
                             if (isset($audit['room'])) {
                                 if ($audit['room'] != "" && $audit['room'] != null) {
-                                    echo '<span class="mx-auto text-muted">Room: '.$audit['room'].'</span>';
+                                    echo '<div class="mx-auto text-muted">Room: '.$audit['room'].'</div>';
+                                } else {
+                                    echo '<div class="mx-auto text-muted"></div>';
                                 }
+                            } else {
+                                echo '<div class="mx-auto text-muted"></div>';
                             }
                     
                             echo'

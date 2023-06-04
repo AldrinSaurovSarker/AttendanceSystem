@@ -53,6 +53,11 @@
    font-size: 30px;
 }
 
+.log-table {
+   display: grid;
+   grid-template-columns: 2fr 1fr 1fr;
+}
+
 @media screen and (max-width:512px) {
    .grid-options {
       grid-template-columns: repeat(2, 1fr);
