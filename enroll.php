@@ -36,13 +36,14 @@
                 if ($data['temp']['action'] == "1" || $data['temp']['action'] == 1) {
                     $tempFingerprint = $data['temp']['fingerHex'];
                     $tempId = $data['temp']['id'];
+                    $room = $data['temp']['room'];
                     unset($data['temp']);
                 
                     foreach ($data as $id => $fingerprint) {
                         if ($fingerprint['fingerHex'] === $tempFingerprint) {
                             echo "<div class='msg success'>Fingerprint already exists.</div>";
                             file_get_contents('http://localhost/attendance/delete.php?id=temp');
-                            file_get_contents('http://localhost/attendance/audit.php?id='.$tempId.'&action=3');
+                            file_get_contents('http://localhost/attendance/audit.php?id='.$tempId.'&action=3&room='.$room);
                             exit;
                         }
                     }
@@ -51,7 +52,7 @@
                         echo "<div class='msg success'>Successfully enrolled.</div>";
                         file_get_contents('http://localhost/attendance/delete.php?id=temp');
                         file_get_contents('http://localhost/attendance/action_add.php?id='.$tempId.'&fingerHex='.$tempFingerprint);
-                        file_get_contents('http://localhost/attendance/audit.php?id='.$tempId.'&action=2');
+                        file_get_contents('http://localhost/attendance/audit.php?id='.$tempId.'&action=2&room='.$room);
                     }
                 }
             } else {

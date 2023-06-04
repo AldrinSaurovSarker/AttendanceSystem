@@ -98,8 +98,14 @@
                     '<div class="card w-100 my-2">
                         <div class="card-body d-flex">
                             '.$icon.'&emsp;
-                            '.$title.'
-                            <span class="ms-auto card-text text-secondary">'.$time.'<span>
+                            '.$title;
+
+                            if (isset($audit['room'])) {
+                                echo '<span class="mx-auto text-muted">Room: '.$audit['room'].'</span>';
+                            }
+                    
+                            echo'
+                            <span class="ms-auto card-text text-secondary">'.$time.'</span>
                         </div>
                     </div>';
                 }

@@ -35,6 +35,7 @@
             } else if (isset($data['temp'])) {
                 if ($data['temp']['action'] == "2" || $data['temp']['action'] == 2) {
                     $tempFingerprintId = $data['temp']['id'];
+                    $room = $data['temp']['room'];
                 
                     if (isset($data['temp']['fingerHex'])) {
                         $tempFingerprintHex = $data['temp']['fingerHex'];
@@ -47,13 +48,13 @@
                         if ($fingerprint['id'] === $tempFingerprintId) {
                             echo "<div class='msg success'>Fingerprint matched with id ".$fingerprint['id'].".</div>";
                             file_get_contents('http://localhost/attendance/action_edit.php?id='.$id.'&fingerHex='.$tempFingerprintHex);
-                            file_get_contents('http://localhost/attendance/audit.php?id='.$fingerprint['id'].'&action=1');
+                            file_get_contents('http://localhost/attendance/audit.php?id='.$fingerprint['id'].'&action=1&room='.$room);
                             file_get_contents('http://localhost/attendance/delete.php?id=temp');
                             exit;
                         }
                     }
                     echo "<div class='msg failure'>Fingerprint doesn't match.</div>";
-                    file_get_contents('http://localhost/attendance/audit.php?id='.$tempFingerprintId.'&action=4');
+                    file_get_contents('http://localhost/attendance/audit.php?id='.$tempFingerprintId.'&action=4&room='.$room);
                     file_get_contents('http://localhost/attendance/delete.php?id=temp');
                 }
             } else {

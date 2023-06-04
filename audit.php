@@ -22,6 +22,7 @@
     $db->insert("Audits", [
         "log" => $log,
         "timestamp" => date("Y-m-d h:i:s A"),
-        "status" => $_GET['action']
+        "status" => $_GET['action'],
+        "room" => $_GET['room']
     ]);
 ?>
